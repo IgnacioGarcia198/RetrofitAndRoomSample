@@ -7,8 +7,9 @@ public class RetrofitClientInstance {
 
     private static Retrofit retrofit;
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com";
+    private static GetDataService serviceApi;
 
-    public static Retrofit getRetrofitInstance() {
+    private static Retrofit getRetrofitInstance() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -16,5 +17,12 @@ public class RetrofitClientInstance {
                     .build();
         }
         return retrofit;
+    }
+
+    public static GetDataService getApi() {
+        if(serviceApi == null) {
+            serviceApi = getRetrofitInstance().create(GetDataService.class);
+        }
+        return serviceApi;
     }
 }

@@ -1,35 +1,42 @@
 package com.example.retrofitfirstattempt.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
+@Entity(tableName = "photoTable")
 public class RetroPhoto implements Parcelable {
 
     @SerializedName("albumId")
     @Expose
     private int albumId;
+
+    @PrimaryKey
     @SerializedName("id")
     @Expose
     private int id;
+
     @SerializedName("title")
     @Expose
     private String title;
+
     @SerializedName("url")
     @Expose
     private String url;
+
     @SerializedName("thumbnailUrl")
     @Expose
     private String thumbnailUrl;
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public RetroPhoto() {
-    }
+    private Date lastRefresh;
+
 
     /**
      *
@@ -39,13 +46,13 @@ public class RetroPhoto implements Parcelable {
      * @param thumbnailUrl
      * @param url
      */
-    public RetroPhoto(int albumId, int id, String title, String url, String thumbnailUrl) {
-        super();
+    public RetroPhoto(int albumId, int id, String title, String url, String thumbnailUrl, Date lastRefresh) {
         this.albumId = albumId;
         this.id = id;
         this.title = title;
         this.url = url;
         this.thumbnailUrl = thumbnailUrl;
+        this.lastRefresh = lastRefresh;
     }
 
     //==============================================
@@ -71,6 +78,10 @@ public class RetroPhoto implements Parcelable {
         return thumbnailUrl;
     }
 
+    public Date getLastRefresh() {
+        return lastRefresh;
+    }
+
     //=================================================
     //setters
 
@@ -92,6 +103,10 @@ public class RetroPhoto implements Parcelable {
 
     public void setThumbnailUrl(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public void setLastRefresh(Date lastRefresh) {
+        this.lastRefresh = lastRefresh;
     }
 
     //===============================================

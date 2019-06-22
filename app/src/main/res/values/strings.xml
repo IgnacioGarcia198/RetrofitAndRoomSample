@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RetroFitFirstAttempt</string>
+    <string name="type_photo_title_hint">Type photo title</string>
+    <string name="in_album_textview">In album:</string>
 </resources>

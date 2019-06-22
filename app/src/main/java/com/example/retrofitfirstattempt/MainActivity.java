@@ -1,15 +1,27 @@
 package com.example.retrofitfirstattempt;
 
 import android.app.ProgressDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.retrofitfirstattempt.api.GetDataService;
 import com.example.retrofitfirstattempt.api.RetrofitClientInstance;
+import com.example.retrofitfirstattempt.data.RetroPhotoRepository;
 import com.example.retrofitfirstattempt.model.RetroPhoto;
+import com.example.retrofitfirstattempt.ui.RetroPhotoViewModel;
+import com.example.retrofitfirstattempt.ui.ViewModelFactory;
 
 import java.util.List;
 
@@ -18,42 +30,93 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    private CustomAdapter adapter;
-    private RecyclerView recyclerView;
-    ProgressDialog progressDoalog;
+    private int albumId;
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private ProgressDialog progressDoalog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         progressDoalog = new ProgressDialog(MainActivity.this);
         progressDoalog.setMessage("Loading....");
+        //viewModel = ViewModelProviders new ViewModelFactory(RetroPhotoRepository.getInstance(this))
+        RetroPhotoViewModel viewModel = ViewModelProviders.of(
+                this,new ViewModelFactory(RetroPhotoRepository.getInstance(this)))
+                .get(RetroPhotoViewModel.class);
+
         progressDoalog.show();
 
-        /*Create handle for the RetrofitInstance interface*/
-        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-        Call<List<RetroPhoto>> call = service.getAllPhotos();
-        call.enqueue(new Callback<List<RetroPhoto>>() {
+        viewModel.init(1);
+        viewModel.getRetroPhotoList().observe(this, list -> {
+            generateDataList(list);
+            progressDoalog.dismiss();
+        });
+
+        Spinner spinner = findViewById(R.id.spinner);
+
+        albumId = 1;
+        Integer[] ints = new Integer[100];
+        for(int i = 0; i < ints.length;i++) {
+            ints[i]=i+1;
+        }
+
+        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(
+                this,android.R.layout.simple_spinner_item,ints);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onResponse(Call<List<RetroPhoto>> call, Response<List<RetroPhoto>> response) {
-                progressDoalog.dismiss();
-                generateDataList(response.body());
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                albumId = position+1;
+                log("albumId = "+albumId);
+                progressDoalog.show();
+                viewModel.init(albumId);
+                viewModel.getRetroPhotoList().observe(MainActivity.this, list -> {
+                    generateDataList(list);
+                    progressDoalog.dismiss();
+                });
+                //valueTV.setText(String.valueOf(mCount));
             }
 
             @Override
-            public void onFailure(Call<List<RetroPhoto>> call, Throwable t) {
-                progressDoalog.dismiss();
-                Toast.makeText(MainActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        EditText editText = findViewById(R.id.editText);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                viewModel.findPhotosByTitleInAlbum(s.toString(),albumId).observe(
+                        MainActivity.this,dataList -> {
+                    generateDataList(dataList);
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }
 
     /*Method to generate List of data using RecyclerView with custom adapter*/
     private void generateDataList(List<RetroPhoto> photoList) {
-        recyclerView = findViewById(R.id.customRecyclerView);
-        adapter = new CustomAdapter(this,photoList);
+        RecyclerView recyclerView = findViewById(R.id.customRecyclerView);
+        CustomAdapter adapter = new CustomAdapter(this,photoList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void log(String msg) {
+        Log.d(LOG_TAG,msg);
     }
 }
