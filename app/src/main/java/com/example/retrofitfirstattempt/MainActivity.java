@@ -7,6 +7,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
+import com.example.retrofitfirstattempt.api.GetDataService;
+import com.example.retrofitfirstattempt.api.RetrofitClientInstance;
+import com.example.retrofitfirstattempt.model.RetroPhoto;
+
 import java.util.List;
 
 import retrofit2.Call;

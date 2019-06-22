@@ -1,4 +1,6 @@
-package com.example.retrofitfirstattempt;
+package com.example.retrofitfirstattempt.api;
+
+import com.example.retrofitfirstattempt.model.RetroPhoto;
 
 import java.util.List;
 
