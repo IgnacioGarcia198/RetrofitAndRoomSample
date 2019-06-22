@@ -19,9 +19,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     private List<RetroPhoto> dataList;
     private Context context;
 
-    public CustomAdapter(Context context,List<RetroPhoto> dataList){
+    public CustomAdapter(Context context){
         this.context = context;
-        this.dataList = dataList;
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -57,17 +56,16 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
                 .error(R.mipmap.ic_launcher_round);
         Glide.with(context).load(dataList.get(position).getThumbnailUrl()).apply(options).into(holder.coverImage);
 
-        /*Picasso.Builder builder = new Picasso.Builder(context);
-        builder.downloader(new OkHttp3Downloader(context));
-        builder.build().load(dataList.get(position).getThumbnailUrl())
-                .placeholder((R.drawable.ic_launcher_background))
-                .error(R.drawable.ic_launcher_background)
-                .into(holder.coverImage);*/
-
     }
 
     @Override
     public int getItemCount() {
+        if(dataList == null) return 0;
         return dataList.size();
+    }
+
+    public void setDataList(List<RetroPhoto> dataList) {
+        this.dataList = dataList;
+        notifyDataSetChanged();
     }
 }

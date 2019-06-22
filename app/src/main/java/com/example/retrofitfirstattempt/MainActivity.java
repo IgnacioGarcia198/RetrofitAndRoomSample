@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private int albumId;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private ProgressDialog progressDoalog;
+    private CustomAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         progressDoalog = new ProgressDialog(MainActivity.this);
         progressDoalog.setMessage("Loading....");
         //viewModel = ViewModelProviders new ViewModelFactory(RetroPhotoRepository.getInstance(this))
+        generateDataList();
         RetroPhotoViewModel viewModel = ViewModelProviders.of(
                 this,new ViewModelFactory(RetroPhotoRepository.getInstance(this)))
                 .get(RetroPhotoViewModel.class);
@@ -49,11 +51,12 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel.init(1);
         viewModel.getRetroPhotoList().observe(this, list -> {
-            generateDataList(list);
+            adapter.setDataList(list);
             progressDoalog.dismiss();
         });
 
         Spinner spinner = findViewById(R.id.spinner);
+        EditText editText = findViewById(R.id.editText);
 
         albumId = 1;
         Integer[] ints = new Integer[100];
@@ -61,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
             ints[i]=i+1;
         }
 
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(
+        ArrayAdapter<Integer> spinnerAdapter = new ArrayAdapter<>(
                 this,android.R.layout.simple_spinner_item,ints);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 progressDoalog.show();
                 viewModel.init(albumId);
                 viewModel.getRetroPhotoList().observe(MainActivity.this, list -> {
-                    generateDataList(list);
+                    adapter.setDataList(list);
                     progressDoalog.dismiss();
                 });
                 //valueTV.setText(String.valueOf(mCount));
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        EditText editText = findViewById(R.id.editText);
+
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -96,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 viewModel.findPhotosByTitleInAlbum(s.toString(),albumId).observe(
                         MainActivity.this,dataList -> {
-                    generateDataList(dataList);
+                    adapter.setDataList(dataList);
                 });
             }
 
@@ -108,9 +111,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*Method to generate List of data using RecyclerView with custom adapter*/
-    private void generateDataList(List<RetroPhoto> photoList) {
+    private void generateDataList() {
         RecyclerView recyclerView = findViewById(R.id.customRecyclerView);
-        CustomAdapter adapter = new CustomAdapter(this,photoList);
+        adapter = new CustomAdapter(this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
