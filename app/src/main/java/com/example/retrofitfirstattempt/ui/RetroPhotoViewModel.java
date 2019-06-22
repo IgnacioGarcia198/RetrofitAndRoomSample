@@ -16,8 +16,8 @@ public class RetroPhotoViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    public void init(int albumId) {
-        retroPhotoList = repository.getPhotosByAlbumId(albumId);
+    public void init(int albumId,String photoTitle) {
+        retroPhotoList = repository.findPhotosByNameInAlbum(photoTitle,albumId);
     }
 
     public LiveData<List<RetroPhoto>> getRetroPhotoList() {

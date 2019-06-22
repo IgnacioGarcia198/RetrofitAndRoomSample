@@ -99,6 +99,12 @@ public class RetroPhotoRepository {
     }
 
     public LiveData<List<RetroPhoto>> findPhotosByNameInAlbum(String photoTitle, int albumId) {
-        return retroPhotoDao.findPhotosByNameAndAlbumInRoom("%"+photoTitle+"%",albumId);
+        refreshPhotosByAlbumId(albumId); // we try to refresh from the api
+        if(!photoTitle.isEmpty()) {
+            return retroPhotoDao.findPhotosByNameAndAlbumInRoom("%" + photoTitle + "%", albumId);
+        }
+        else {
+            return retroPhotoDao.findPhotosByAlbumIdInRoom(albumId);
+        }
     }
 }

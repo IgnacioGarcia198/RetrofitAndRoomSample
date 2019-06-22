@@ -30,10 +30,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    private int albumId;
+    private int albumId = 1;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private ProgressDialog progressDoalog;
     private CustomAdapter adapter;
+    private EditText editText;
+    private RetroPhotoViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,20 +45,16 @@ public class MainActivity extends AppCompatActivity {
         progressDoalog.setMessage("Loading....");
         //viewModel = ViewModelProviders new ViewModelFactory(RetroPhotoRepository.getInstance(this))
         generateDataList();
-        RetroPhotoViewModel viewModel = ViewModelProviders.of(
+        viewModel = ViewModelProviders.of(
                 this,new ViewModelFactory(RetroPhotoRepository.getInstance(this)))
                 .get(RetroPhotoViewModel.class);
 
-        progressDoalog.show();
-
-        viewModel.init(1);
-        viewModel.getRetroPhotoList().observe(this, list -> {
-            adapter.setDataList(list);
-            progressDoalog.dismiss();
-        });
 
         Spinner spinner = findViewById(R.id.spinner);
-        EditText editText = findViewById(R.id.editText);
+        editText = findViewById(R.id.editText);
+
+        updatePhotos();
+
 
         albumId = 1;
         Integer[] ints = new Integer[100];
@@ -73,13 +71,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 albumId = position+1;
                 log("albumId = "+albumId);
-                progressDoalog.show();
-                viewModel.init(albumId);
-                viewModel.getRetroPhotoList().observe(MainActivity.this, list -> {
-                    adapter.setDataList(list);
-                    progressDoalog.dismiss();
-                });
-                //valueTV.setText(String.valueOf(mCount));
+                updatePhotos();
             }
 
             @Override
@@ -121,5 +113,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void log(String msg) {
         Log.d(LOG_TAG,msg);
+    }
+
+    private void updatePhotos() {
+        progressDoalog.show();
+        viewModel.init(albumId,editText.getText().toString().trim());
+        viewModel.getRetroPhotoList().observe(this, list -> {
+            adapter.setDataList(list);
+            progressDoalog.dismiss();
+        });
     }
 }
