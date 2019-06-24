@@ -14,20 +14,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.example.retrofitfirstattempt.api.GetDataService;
-import com.example.retrofitfirstattempt.api.RetrofitClientInstance;
 import com.example.retrofitfirstattempt.data.RetroPhotoRepository;
-import com.example.retrofitfirstattempt.model.RetroPhoto;
+import com.example.retrofitfirstattempt.ui.CustomAdapter;
 import com.example.retrofitfirstattempt.ui.RetroPhotoViewModel;
 import com.example.retrofitfirstattempt.ui.ViewModelFactory;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private int albumId = 1;

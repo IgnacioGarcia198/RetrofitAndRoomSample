@@ -14,7 +14,7 @@ import org.junit.Test;
 import java.util.Date;
 import java.util.List;
 
-public class DBTest {
+public abstract class DBTest {
     protected RetroPhotoDatabase db;
 
     @Before

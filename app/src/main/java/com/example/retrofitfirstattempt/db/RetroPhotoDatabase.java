@@ -8,7 +8,7 @@ import android.content.Context;
 
 import com.example.retrofitfirstattempt.model.RetroPhoto;
 
-@Database(entities = {RetroPhoto.class},version = 1)
+@Database(entities = {RetroPhoto.class},version = 1,exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class RetroPhotoDatabase extends RoomDatabase {
 
