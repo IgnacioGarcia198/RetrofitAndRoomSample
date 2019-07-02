@@ -1,9 +1,9 @@
 package com.example.retrofitfirstattempt.data;
 
 
-import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.retrofitfirstattempt.api.GetDataService;
@@ -30,7 +30,7 @@ import retrofit2.Response;
 public class RetroPhotoRepository {
 
     private static int FRESH_TIMEOUT_IN_MINUTES = 3;
-
+    private static final String LOG_TAG = RetroPhotoRepository.class.getSimpleName();
     private final GetDataService webservice;
     private final RetroPhotoDao retroPhotoDao;
     private final Executor executor;
@@ -68,6 +68,10 @@ public class RetroPhotoRepository {
                     public void onResponse(Call<List<RetroPhoto>> call, Response<List<RetroPhoto>> response) {
                         if(response.isSuccessful()) {
                             Toast.makeText(context, "Data refreshed from network !", Toast.LENGTH_LONG).show();
+                            //executor.execute(() -> {
+                                Log.d(LOG_TAG,"Data refreshed from network !");
+                            //});
+
                             // insert new data in the database
 
                             executor.execute(() -> {
