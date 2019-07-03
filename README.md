@@ -11,6 +11,11 @@ and it will save this info into a database. The photos are shown in a RecyclerVi
 In order to browse photos there is a Spinner to choose the album and an EditText to enter a photo title.
 When restarting the activity or rotating the device the screen keeps the same information.(One of the good things of using ViewModel and LiveData).
 
+## Preview
+<p align="center">
+ <img src ="https://raw.githubusercontent.com/IgnacioGarcia198/RetrofitAndRoomSample/retrofitAndRoomSample/Screenshot_1562137202.png", height=500/>
+</p>
+
 
 ### Architecture Components
 
