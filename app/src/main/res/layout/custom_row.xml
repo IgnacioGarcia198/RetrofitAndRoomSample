@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.example.retrofitfirstattempt.model.RetroPhoto" />
+        <import type="com.example.retrofitandroomsample.model.RetroPhoto" />
         <variable
             name="retroPhoto"
             type="RetroPhoto" />
