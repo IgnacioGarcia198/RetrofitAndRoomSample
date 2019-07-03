@@ -1,7 +1,7 @@
 # Android Basic Retrofit and Room Sample 
 
 This is a simple implementation of Android Architecture Components: https://developer.android.com/topic/libraries/architecture/guide.html
-It is based on the one of Philippe Boisney: https://github.com/PhilippeBoisney/GithubArchitectureComponents
+<br/>It is based on the one of <b>Philippe Boisney:</b> https://github.com/PhilippeBoisney/GithubArchitectureComponents
 although my approach is simpler without using Dagger nor ButterKnife.
 
 ## Getting Started
@@ -38,10 +38,8 @@ This application implements the following concepts :
 
 
 ## Author
-
 Ignacio Garcia - (ignaciogarcia198@gmail.com)
 
 
 ## Acknowledgments
-
-Philippe BOISNEY https://github.com/PhilippeBoisney/
+Philippe Boisney https://github.com/PhilippeBoisney/
